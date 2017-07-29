@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<accordion id="2" name="众筹活动">
+	<menus>
+		<menu id="20" name="活动信息" url="wechat/video/listPage.do">
+			
+		</menu>
+		<menu id="21" name="活动视频" url="wechat/video/listDetailPage.do">
+			
+		</menu>
+	</menus>
+</accordion>

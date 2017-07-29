@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<accordion id="9" name="供应链管理">
+	<menus>
+		<menu id="90" name="供应商管理" icon="">
+			<children>
+				<menu id="901" name="供应商档案" url="supplyChain/providerDoc/listPage.do">
+				</menu>
+				<menu id="902" name="供应商合同" url="supplyChain/providerContract/listPage.do">
+				</menu>
+			</children>
+		</menu>
+		<menu id="91" name="产品管理">
+			<children>
+				<menu id="911" name="产品分类" url="#.do">
+				</menu>
+				<menu id="912" name="产品登记" url="supplyChain/commodityRecord/listPage.do">
+				</menu>
+			</children>
+		</menu>
+		<menu id="92" name="要货管理">
+			<children>
+				<menu id="921" name="要货单管理" url="#.do">
+				</menu>
+				<menu id="922" name="收货单管理" url="#.do">
+				</menu>
+			</children>
+		</menu>
+		<menu id="93" name="采购管理" url="#.do">
+			<children>
+				<menu id="931" name="采购计划" url="#.do">
+				</menu>
+				<menu id="932" name="采购订单" url="#.do">
+				</menu>
+			</children>
+		</menu>
+		<menu id="94" name="大仓管理" url="#.do">
+			<children>
+				<menu id="941" name="验收入库" url="#.do">
+				</menu>
+				<menu id="942" name="上架入库" url="#.do">
+				</menu>
+				<menu id="943" name="退库管理" url="#.do">
+				</menu>
+				<menu id="944" name="退货管理" url="#.do">
+				</menu>
+				<menu id="945" name="调库管理" url="#.do">
+				</menu>
+				<menu id="946" name="拣货管理" url="#.do">
+				</menu>
+				<menu id="947" name="出库管理" url="#.do">
+				</menu>
+				<menu id="948" name="库存及盘点管理" url="#.do">
+				</menu>
+			</children>
+		</menu>
+		<menu id="95" name="加工管理" url="#.do">
+			<children>
+				<menu id="951" name="加工任务管理" url="#.do">
+				</menu>
+				<menu id="952" name="原材料领用" url="#.do">
+				</menu>
+				<menu id="953" name="产成品入库" url="#.do">
+				</menu>
+			</children>
+		</menu>
+		<menu id="96" name="物流配送管理" url="#.do">
+			<children>
+				<menu id="961" name="物流单管理" url="#.do">
+				</menu>
+				<menu id="962" name="网店业务管理" url="#.do">
+				</menu>
+			</children>
+		</menu>
+	</menus>
+</accordion>

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+          http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.1.xsd"
+	default-lazy-init ="true" >
+
+	<!-- 定义受环境影响易变的变量 -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<!-- 标准配置 -->
+				<value>classpath:application.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 要使用注解必须添加此项 -->
+	<context:annotation-config />
+	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+	
+	<!-- JBPM配置 -->
+	<!--  
+	<bean id="springHelper" class="org.jbpm.pvm.internal.processengine.SpringHelper" />
+	<bean id="processEngine" factory-bean="springHelper"
+		factory-method="createProcessEngine" />
+	 -->
+	 
+	<!-- 使用annotation 自动注册bean,并检查@Required,@Autowired的属性已被注入 -->
+	<context:component-scan base-package="com.ht,com.ht.wechat.admin,com.dhcc,com.ht.zc.admin,com.ht.hb.admin,com.banana.admin,com.ht,com.ht.sys" />
+	
+
+	<!-- 数据源配置 -->
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" lazy-init="true">
+		<property name="driverClassName" value="${dataSource.driverClassName}"/>
+		<property name="url" value="${dataSource.url}" />
+		<property name="username" value="${dataSource.username}" />
+		<property name="password" value="${dataSource.password}" />
+		
+		<!-- Connection Pooling Info -->
+		<property name="maxActive" value="500" />
+		<property name="maxIdle" value="50" />
+		<property name="maxWait" value="6000" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="defaultAutoCommit" value="false" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean" lazy-init="true">
+		<property name="dataSource" ref="dataSource" />
+		<!-- 同步POJO到数据库的设置选项 -->
+		<!-- <property name="schemaUpdate" value="true"/> -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				
+				<!-- <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop> -->
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+				<!--  
+				<prop key="hibernate.current_session_context_class">thread</prop>
+				-->
+				<prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+				<prop key="hibernate.cache.provider_configuration_file_resource_path">${hibernate.ehcache_config_file}</prop>
+				<prop key="hibernate.use_query_cache">${hibernate.use_query_cache}</prop>
+				<prop key="hibernate.cache.use_sencond_levl_cache">${hibernate.cache.use_sencond_levl_cache}</prop>
+			</props>
+		</property>
+		<!--<property name="namingStrategy" ref="myNamingStrategy"></property>
+		--><property name="packagesToScan">
+			<list>
+				<!-- 扫描系统核心bean -->
+				<value>com.ht.sys.bean</value>
+				<value>com.ht.budget.bean</value>
+				<value>com.ht.wechat.admin.entity</value>
+				<value>com.dhcc.entity</value>
+				<value>com.ht</value>
+				<!-- 众筹实体 -->
+				<value>com.ht.zc.admin.bean</value>
+				<!-- 红包实体 -->
+				<value>com.ht.hb.admin.bean</value>
+				<!-- 供应链 -->
+				<value>com.banane.admin.bean</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 数据库表和字段生成策略 -->
+	<bean id="myNamingStrategy" class="com.ht.sys.bean.MyNamingStrategy"></bean>
+	
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate" lazy-init="true">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<!-- 配置SpringJDBC -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate" lazy-init="true">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	
+	<!-- hibernate事务配置 -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager" lazy-init="true">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*"    propagation="REQUIRED" read-only="true" />
+			<!--<tx:method name="find*"   propagation="REQUIRED" read-only="true"/>-->
+			<tx:method name="load*"   propagation="REQUIRED" read-only="true"/>
+			<tx:method name="save*"   propagation="REQUIRED"/>
+			<tx:method name="create*"   propagation="REQUIRED"/>
+			<tx:method name="backupDB"  propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED"/>
+			<tx:method name="insert*" propagation="REQUIRED"/>
+			<tx:method name="delete*" propagation="REQUIRED"/>
+			<tx:method name="casecadeDelete" propagation="REQUIRED"/>
+			<tx:method name="allotFunctionAuth" propagation="REQUIRED"/>
+			<tx:method name="allotDataAuth" propagation="REQUIRED"/>
+			<tx:method name="submit*" propagation="REQUIRED"/>
+			<tx:method name="audit*" propagation="REQUIRED"/>
+			<tx:method name="*" propagation="REQUIRED" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 给sys添加事务 -->
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="sysPointcut" expression="execution(* com.ht.sys.service..*.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="sysPointcut"/>
+	</aop:config>
+	
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="budgetPointcut" expression="execution(* com.ht.budget.service..*.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="budgetPointcut"/>
+	</aop:config>
+	
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="wechatPointcut" expression="execution(* com.ht.wechat.admin.service..*.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="wechatPointcut"/>
+	</aop:config>
+	
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="zcPointcut" expression="execution(* com.ht.zc.admin.service..*.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="zcPointcut"/>
+	</aop:config>
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="hbPointcut" expression="execution(* com.ht.hb.admin.service..*.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="hbPointcut"/>
+	</aop:config>
+	
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="supplyChainPointcut" expression="execution(* com.banane.admin.service..*.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="supplyChainPointcut"/>
+	</aop:config>
+	
+	<!-- SpringMVC配置 -->
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" >    
+	    <property name="messageConverters">    
+	         <list>    
+	             <bean class = "org.springframework.http.converter.StringHttpMessageConverter">    
+	                <property name = "supportedMediaTypes">    
+	                     <list>    
+	                         <value>text/plain;charset=UTF-8</value>    
+	                     </list>    
+	                </property>    
+	             </bean>    
+	         </list>    
+	    </property>    
+	</bean>
+	
+	<!-- 定义缓存管理器 -->
+    <!-- 启用缓存注解功能，这个是必须的，否则注解不会生效，另外，该注解一定要声明在spring主配置文件中才会生效 -->
+	<cache:annotation-driven cache-manager="ehCacheManager"/>  
+	
+	<!-- spring自己的换管理器，这里定义了两个缓存位置名称 ，既注解中的data -->
+    <bean id="ehCacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">  
+        <property name="configLocation">
+        	<value>classpath:ehcache.xml</value>
+        </property>
+    </bean>
+    <bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"
+    	p:cacheManager-ref="ehCacheManagerFactory" >
+    </bean>
+    
+    
+	<!--配置数据库备份的调度任务-->
+	<!-- 这种方式必须继承QuartzJobBean，实现executeInternal方法，不推荐使用-->
+	<!-- 
+	<bean  id="sqlBackupJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" >
+			<value>com.bluefat.sys.quartz.TestQuartz</value>
+		</property>
+	</bean>
+	-->
+	<bean id="sqlBackupJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean" lazy-init="false">
+		<property name="targetObject">
+			<ref bean="sys_sqlBackupService"/>
+		</property>
+		<property name="targetMethod">
+			<value>backupDB</value>
+		</property>
+	</bean>
+	
+	<!-- 定义触发的时间 -->
+	<bean id="cronSqlBackupTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean" lazy-init="false">
+		 <property name="jobDetail">
+		 	  <ref bean="sqlBackupJob"/>
+		 </property>
+		 <property name="cronExpression">
+		  	 <value>0 0 0 * * ?</value>  <!--凌晨12点自动备份数据库 -->
+		  	 <!--<value>0/10 * * * * ?</value>--> <!--每隔五秒钟触发一次-->
+		 </property>
+	</bean>
+	
+	
+	<!-- 定义触发器 -->
+ 	<bean id="schedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" lazy-init="false">
+  		<property name="triggers">
+   			<list>
+    			<ref bean="cronSqlBackupTrigger"/>
+   			</list>
+  		</property>
+ 	</bean>
+</beans>   

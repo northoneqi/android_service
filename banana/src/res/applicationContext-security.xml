@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:ss="http://www.springframework.org/schema/security" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+          
+
+	<ss:http entry-point-ref="authenticationProcessingFilterEntryPoint"
+		>
+		<ss:intercept-url pattern="/font/**" filters="none" />
+		<ss:intercept-url pattern="/fontword/**" filters="none" />
+		<ss:intercept-url pattern="/register.jsp" filters="none" />
+		<ss:intercept-url pattern="/register/**" filters="none" />
+		<ss:intercept-url pattern="/css/**" filters="none" />
+		<ss:intercept-url pattern="/images/**" filters="none" />
+		<ss:intercept-url pattern="/js/**" filters="none" />
+		<ss:intercept-url pattern="/javascripts/**" filters="none" />
+		<ss:intercept-url pattern="/uimaker/**" filters="none" />
+		<ss:intercept-url pattern="/index.jsp" filters="none" />
+		
+		<!-- 免登陆验证 -->
+		<ss:remember-me />
+
+		<!-- session超时 -->
+		<ss:session-management invalid-session-url="/index.jsp" />  
+		<ss:custom-filter ref="adminLoginFilter" position="FORM_LOGIN_FILTER" />
+		
+		<!-- 增加一个filter，这点与Acegi是不一样的，不能修改默认的filter了，
+		这个filter位于FILTER_SECURITY_INTERCEPTOR之前  -->
+         <!-- <ss:custom-filter ref="mySecurityFilter" before="FILTER_SECURITY_INTERCEPTOR"/> -->
+         
+         <ss:logout logout-url="/admin/logout"
+         	success-handler-ref="logoutHandler"
+         />
+	</ss:http>
+
+	<!-- 验证配置 ， 认证管理器，实现用户认证的入口，主要实现UserDetailsService接口即可 -->
+	<ss:authentication-manager alias="myAuthenticationManager">
+		<ss:authentication-provider
+			user-service-ref="userDetailsService">
+		</ss:authentication-provider>
+	</ss:authentication-manager>
+	
+	<bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder">
+	</bean>
+
+	<!-- 一个自定义的filter，必须包含authenticationManager, accessDecisionManager,securityMetadataSource三个属性 -->
+	<!-- <bean id="mySecurityFilter" class="com.ht.sys.security.MySecurityFilter"> -->
+		<!-- 用户是否拥有所请求资源的权限 -->
+		<!-- <property name="accessDecisionManager" ref="myAccessDecisionManager" /> -->
+		<!-- 用户拥有的权限 -->
+		<!-- <property name="authenticationManager" ref="myAuthenticationManager" /> -->
+		<!-- 资源与权限对应关系 -->
+		<!-- <property name="securityMetadataSource" ref="mySecurityMetadataSource" /> -->
+	<!-- </bean> -->
+
+	<!-- 管理员登录验证器 -->
+	<bean id="adminLoginFilter" class="com.ht.sys.security.MyUsernamePasswordAuthenticationFilter">
+		<!-- 处理登录的action -->
+		<property name="filterProcessesUrl" value="/admin/login" />
+		<!-- 验证成功后的处理 -->
+		<property name="authenticationSuccessHandler" ref="authenticationHandler" />
+		<!-- 验证失败后的处理 -->
+		<property name="authenticationFailureHandler" ref="authenticationHandler" />
+		<property name="authenticationManager" ref="myAuthenticationManager" />
+		<!-- 注入DAO为了查询相应的用户 -->
+	</bean>
+
+	<!-- 未登录的切入点 -->
+	<bean id="authenticationProcessingFilterEntryPoint" class="com.ht.sys.security.LoginUrlEntryPoint">
+	</bean>
+	
+	<ss:global-method-security  
+        jsr250-annotations="enabled" secured-annotations="enabled" /> 
+</beans>

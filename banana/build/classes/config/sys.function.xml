@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<accordion id="1" name="系统管理">
+	<menus>
+		<menu id="11" name="权限管理" icon="">
+			<children>
+				<menu id="111" name="部门管理" url="sys/department/addDepartmentPage.do">
+				</menu>
+				<menu id="112" name="用户管理" url="sys/user/addPage.do">
+				</menu>
+				<menu id="113" name="角色管理" url="sys/role/listPage.do">
+				</menu>
+				<menu id="114" name="资源管理" url="sys/resource/listPage.do">
+				</menu>
+				<menu id="115" name="职工管理" url="sys/staff/addPage.do">
+				</menu>
+			</children>
+		</menu>
+		<menu id="12" name="数据备份还原">
+			<children>
+				<menu id="121" name="数据备份与还原" url="sys/sqlbackup/listPage.do">
+				</menu>
+			</children>
+		</menu>
+		<menu id="13" name="系统信息">
+			<children>
+				<menu id="131" name="日志管理" url="sys/log/listPage.do">
+				</menu>
+				<menu id="132" name="系统基本信息" url="sys/info/showInfo.do">
+				</menu>
+			</children>
+		</menu>
+		<menu id="14" name="数据字典" url="sys/dict/listPage.do">
+		</menu>
+		<menu id="15" name="流水号管理" url="sys/sn/listPage.do">
+		</menu>
+	</menus>
+</accordion>

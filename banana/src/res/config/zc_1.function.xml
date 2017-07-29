@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<accordion id="7" name="众筹活动">
+	<menus>
+		<menu id="70" name="众筹计划" url="admin/backinfoTwo/listPage.do">
+			<buttons>
+				<button id="701" name="查看"></button>
+				<button id="702" name="增加"></button>
+				<button id="703" name="更新"></button>
+				<button id="704" name="删除"></button>
+				<button id="705" name="导出Excel"></button>
+			</buttons>
+		</menu>
+		<menu id="71" name="众筹订单" url="admin/orderbasicTwo/listPage.do">
+			<buttons>
+				<button id="711" name="查看"></button>
+				<button id="712" name="导出Excel"></button>
+			</buttons>
+		</menu> 
+		<menu id="72" name="众筹统计" url="admin/orderbasicTwo/orderStaticsPage.do">
+			<buttons>
+				<button id="721" name="导出Excel"></button> 
+			</buttons>
+		</menu>
+		 
+	</menus>
+</accordion>

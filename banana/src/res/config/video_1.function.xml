@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<accordion id="5" name="抢红包活动">
+	<menus>
+		<menu id="50" name="抢红包计划" url="admin/mciroactivity/listPage.do">
+			<buttons>
+				<button id="501" name="查看"></button>
+				<button id="502" name="增加"></button>
+				<button id="503" name="更新"></button>
+				<button id="504" name="删除"></button>
+				<button id="505" name="导出Excel"></button>
+			</buttons>
+		</menu>
+		<menu id="51" name="抢红包订单" url="admin/mciroactivity/listDetailPage.do">
+			<buttons>
+				<button id="511" name="查看"></button>
+				<button id="512" name="导出Excel"></button>
+			</buttons>
+		</menu>
+		<menu id="52" name="抢红包统计" url="admin/mciroactivity/orderStaticsPage.do">
+		<buttons> 
+				<button id="521" name="导出Excel"></button>
+			</buttons>
+		</menu>
+		
+	</menus>
+</accordion>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<accordion id="3" name="水赠饮活动" icon="accod_3.png">
+	<menus>
+		<menu id="30" name="个人水赠饮活动" url="wechat/mcirowater/listPage.do">
+		</menu>
+		<menu id="31" name="企业水赠饮活动" url="wechat/mcirowater/listPage.do">
+		</menu>
+	</menus>
+</accordion>

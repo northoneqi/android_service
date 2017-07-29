@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<accordion id="4" name="抢盒子活动">
+	<menus>
+		<menu id="40" name="抢盒子统计" url="wechat/box/showPage.do">
+			
+		</menu>
+		<menu id="41" name="抢盒子订单地址" url="wechat/video/listDetailPage.do">
+			
+		</menu>
+	</menus>
+</accordion>

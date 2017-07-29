@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<accordion id="6" name="视频投票活动" icon="sptp.png">
+	<menus>
+		<menu id="60" name="活动信息" url="wechat/video/listPage.do">
+			
+		</menu>
+		<menu id="61" name="活动视频" url="wechat/video/listDetailPage.do">
+			
+		</menu>
+	</menus>
+</accordion>
